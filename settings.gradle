@@ -1,0 +1,3 @@
+rootProject.name = 'automated-compliance-dashboard'
+include 'Web'
+

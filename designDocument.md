@@ -60,6 +60,48 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
 - **DynamoDB Tables**:
     - **ComplianceRules**: Stores compliance rules (e.g., threshold levels, actions).
     - **ComplianceStatus**: Stores real-time compliance status data for different business units.
+  ### Public Models
+#### //ComplianceRulesModel
+* String ruleId; // Unique identifier for each compliance rule
+
+* String ruleName; // Name of the compliance rule
+
+* String description; // Description of what the rule checks for
+
+* int threshold; // The threshold value that triggers a compliance action
+
+* String action; // The action to be taken when the rule is breached
+
+* String background;
+
+* ZonedDateTime createdAt; // The date and time when the rule was created.
+* ZonedDateTime updatedAt; // The date and time when the rule was last updated
+
+#### //ComplianceViolationModel
+- String violationId; // Unique identifier for the violation
+- String description; // Description of the compliance violation
+- ZonedDateTime detectedAt; // Timestamp when the violation was detected
+- String resolutionStatus; // Status of the resolution process (e.g., Open, In Progress, Resolved)
+- ZonedDateTime resolvedAt; // Timestamp when the violation was resolved (null if not resolved)
+- String businessUnit; // The business unit affected by this violation
+- String severity; // Severity level of the violation (e.g., Low, Medium, High, Critical)
+- String ruleId; // Reference to the compliance rule that was violated
+- String frameworkId; // Reference to the compliance framework this violation relates to
+- String assignedTo; // User ID of the person assigned to resolve this violation
+- List<String> affectedAssets; // List of assets or systems affected by this violation
+- String remediationPlan; // Description of the plan to resolve the violation
+- List<String> evidenceLinks; // Links to evidence related to the violation or its resolution
+
+- #### //ComplianceStatusModel
+- * String statusId; // Unique identifier for this status entry
+- * String framework;  // Name of the compliance framework (e.g., SOC 2, ISO 27001, GDPR)
+  * String status;  // Current status of compliance (e.g., Compliant, Non-compliant, At Risk)
+  * ZonedDateTime lastUpdated;  // The date and time when the compliance status was last updated
+  * List<ComplianceViolationModel> activeViolations; // List of current active violations
+  * String businessUnit;  // The specific business unit or department to which this compliance status applies
+  * String lastAssessmentId; // Reference to the last compliance assessment performed
+  * int riskScore;  // A numerical score representing the level of risk associated with the current compliance status
+  * ZonedDateTime nextAssessmentDue; // When the next compliance assessment is due
 - **Data Models**:
     - **ComplianceRule**: Represents a compliance rule (ID, name, threshold, action).
     - **ComplianceStatus**: Represents the current status of compliance (framework, status, last updated).

@@ -102,11 +102,30 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
   * String lastAssessmentId; // Reference to the last compliance assessment performed
   * int riskScore;  // A numerical score representing the level of risk associated with the current compliance status
   * ZonedDateTime nextAssessmentDue; // When the next compliance assessment is due
+  
+#### // UserModel: (user management, authentication, and authorization.)
+ - String userId
+ - String username
+  -String email
+ - String hashedPassword
+ - List<String> roles
+  - ZonedDateTime lastLogin
+  - Boolean isActive
+
+#### //AuditLogModel: (a record of all significant actions within the system, which is a key aspect of compliance and security.)
+- String logId
+- String actionType
+- String userId
+- ZonedDateTime timestamp
+- String details
+- String relatedEntityId
+- String ipAddress
 - **Data Models**:
     - **ComplianceRule**: Represents a compliance rule (ID, name, threshold, action).
     - **ComplianceStatus**: Represents the current status of compliance (framework, status, last updated).
 
 ## 10. Pages
+![img_2.png](img_2.png)
 - **Dashboard**: A central page displaying real-time compliance status, risk alerts, and key metrics.
 - **Rule Management**: A page for adding, editing, and deleting compliance rules.
 - **Reports**: A page for generating and downloading compliance reports.

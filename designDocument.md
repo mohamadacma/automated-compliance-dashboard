@@ -127,6 +127,7 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
 ## 10. Pages
 ![img_2.png](img_2.png)
 ![img_3.png](img_3.png)
+![img_4.png](img_4.png)
 - **Dashboard**: A central page displaying real-time compliance status, risk alerts, and key metrics.
 - **Rule Management**: A page for adding, editing, and deleting compliance rules.
 - **Reports**: A page for generating and downloading compliance reports.

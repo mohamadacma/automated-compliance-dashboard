@@ -133,9 +133,24 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
     - **ComplianceStatus**: Represents the current status of compliance (framework, status, last updated).
 
 ## 10. Pages
+### Dashboard
+A central page displaying real-time compliance status, risk alerts, and key metrics. Provides an at-a-glance overview of the organization's compliance health.
+
 ![img_2.png](img_2.png)
+### Rule Management
+A page for adding, editing, and deleting compliance rules. Allows administrators to define and maintain the compliance framework.
+
 ![img_3.png](img_3.png)
+
+### Violations
+A page for viewing and managing compliance violations. Enables users to track, prioritize, and resolve non-compliance issues.
+
 ![img_4.png](img_4.png)
-- **Dashboard**: A central page displaying real-time compliance status, risk alerts, and key metrics.
-- **Rule Management**: A page for adding, editing, and deleting compliance rules.
+
+### Users
+A page for managing user accounts, roles, and permissions. Facilitates user administration and access control.
+
+![img_5.png](img_5.png)
+
+
 - **Reports**: A page for generating and downloading compliance reports.

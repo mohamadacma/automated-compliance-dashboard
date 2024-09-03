@@ -120,6 +120,14 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
 - String details
 - String relatedEntityId
 - String ipAddress
+
+#### //FrameworkModel:
+ -String frameworkId;
+ -String name;
+ -String description;
+-String version;
+ -ZonedDateTime lastUpdated;
+ -List<String> associatedRuleIds;
 - **Data Models**:
     - **ComplianceRule**: Represents a compliance rule (ID, name, threshold, action).
     - **ComplianceStatus**: Represents the current status of compliance (framework, status, last updated).

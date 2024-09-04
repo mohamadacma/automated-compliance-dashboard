@@ -48,18 +48,113 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
 ## 7. API
 - **GET /api/compliance-status**: Fetches the current compliance status across all frameworks.
 - **POST /api/rules**: Adds a new compliance rule.
+- ### Add Compliance Rule Endpoint
+
+* Accepts a POST request to /api/rules
+* Accepts data to create a new compliance rule with the following information:
+
+ruleName (String): Name of the compliance rule
+description (String): Detailed description of what the rule checks for
+framework (String): The compliance framework this rule belongs to (e.g., SOC 2, GDPR)
+threshold (int): The threshold value that triggers a compliance action
+action (String): The action to be taken when the rule is breached
+
+##### UML sequence diagram representation:
+![img_6.png](img_6.png)
+
+
+Returns the newly created compliance rule with a unique ruleId assigned by the Compliance Dashboard service.
 - **PUT /api/rules/{id}**: Updates an existing compliance rule.
 - **DELETE /api/rules/{id}**: Deletes a compliance rule.
 - **GET /api/reports**: Generates and downloads a compliance report.
 
-## 8. UML Diagrams
-- **Sequence Diagram**: Illustrate how the system processes compliance data, from data ingestion to dashboard updates.
-- **Class Diagram**: Show the structure of your Spring Boot application, including models, controllers, and services.
+## API Endpoints
+
+### Update Compliance Rule Endpoint
+* **Method**: PUT
+* **Path**: `/api/rules/{ruleId}`
+* **Description**: Updates an existing compliance rule
+* **Request Body**:
+  ```json
+  {
+    "ruleName": "string",
+    "description": "string",
+    "framework": "string",
+    "threshold": int,
+    "action": "string"
+  }
+
+* Response: Returns the updated compliance rule information
+* Error Handling: If ruleId not found: Throw RuleNotFoundException
+ ** If invalid input: Throw InvalidAttributeValueException
+
+ ### Delete Compliance Rule Endpoint
+
+* **Method**: DELETE
+* **Path**: /api/rules/{ruleId}
+* **Description**: Deletes a compliance rule
+* **Response**: Success message
+* Error Handling: If ruleId not found: Throw RuleNotFoundException
+
+### Get Compliance Status Endpoint
+
+* **Method**: GET
+* **Path**: /api/compliance-status
+* **Description**: Retrieves current compliance status across all frameworks
+* **Query Parameters**:
+
+* framework (optional): Filter by specific framework
+* businessUnit (optional): Filter by specific business unit
+
+* **Response**: List of compliance statuses
+* Note: Returns empty list if no data found for given filters
+
+### Get Violations Endpoint
+
+* **Method**: GET
+* **Path**: /api/violations
+* **Description** : Retrieves list of compliance violations
+* **Query Parameters**:
+
+-status (optional): Filter by violation status
+-severity (optional): Filter by violation severity
+-fromDate (optional): Filter violations from this date
+-toDate (optional): Filter violations up to this date
+
+
+Response: List of violations with details
+Note: Returns empty list if no violations found for given filters
+
+### Generate Compliance Report Endpoint
+
+* **Method**: POST
+* **Path**: /api/reports
+* **Description**: Generates a compliance report
+* **Request Body**:
+  ```json
+  {
+    "frameworkId": "string",
+   "fromDate": "string (ISO 8601 format)",
+    "toDate": "string (ISO 8601 format)",
+    "includeViolations": boolean
+  }
+
+* Response: URL to download the generated report
+* Error Handling:
+
+If report generation fails: Throw ReportGenerationException
 
 ## 9. Tables and Models
 - **DynamoDB Tables**:
-    - **ComplianceRules**: Stores compliance rules (e.g., threshold levels, actions).
-    - **ComplianceStatus**: Stores real-time compliance status data for different business units.
+    - **ComplianceManagement**: 
+      Partition Key: PK (String)
+      Sort Key: SK (String)
+      Attributes:
+
+     Data (Map - will contain all other attributes)
+     GSI1PK (String - for Global Secondary Index)
+     GSI1SK (String - for Global Secondary Index)
+- 
   ### Public Models
 #### //ComplianceRulesModel
 * String ruleId; // Unique identifier for each compliance rule
@@ -128,9 +223,6 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
 -String version;
  -ZonedDateTime lastUpdated;
  -List<String> associatedRuleIds;
-- **Data Models**:
-    - **ComplianceRule**: Represents a compliance rule (ID, name, threshold, action).
-    - **ComplianceStatus**: Represents the current status of compliance (framework, status, last updated).
 
 ## 10. Pages
 ### Dashboard

@@ -246,3 +246,17 @@ A page for managing user accounts, roles, and permissions. Facilitates user admi
 
 
 - **Reports**: A page for generating and downloading compliance reports.
+
+## Testing Approach
+- Unit tests for Lambda functions using JUnit
+- Integration tests for API endpoints using Postman or a similar tool
+- DynamoDB local for database testing
+- Jest for frontend component testing
+- Implement CI/CD pipeline using GitHub Actions for automated testing
+
+## MVP Core Features
+1. User authentication and authorization
+2. CRUD operations for compliance rules
+3. Basic compliance status dashboard
+4. Simple violation detection and reporting
+5. Fundamental data visualizations using charts.js or a similar library

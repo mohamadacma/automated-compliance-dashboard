@@ -1,0 +1,169 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Automated Compliance Dashboard
+
+Parameters:
+  CognitoDomain:
+    Type: String
+    Description: A name for the Cognito Domain
+
+  S3Bucket:
+    Type: String
+    Description: Parameter to specify the S3 Bucket to use for deployment
+
+Globals:
+  Function:
+    Timeout: 20
+
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+      AllowHeaders: "'content-type,authorization'"
+      AllowOrigin: "'*'"
+    Auth:
+      DefaultAuthorizer: CognitoAuthorizer
+      AddDefaultAuthorizerToCorsPreflight: false
+      Authorizers:
+        CognitoAuthorizer:
+          UserPoolArn: !GetAtt UserPool.Arn
+
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub ${CognitoDomain}-user-pool
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+      AllowedOAuthFlowsUserPoolClient: true
+      CallbackURLs:
+        - http://localhost:8000
+      LogoutURLs:
+        - http://localhost:8000
+      AllowedOAuthFlows:
+        - code
+        - implicit
+      AllowedOAuthScopes:
+        - phone
+        - email
+        - openid
+        - profile
+      SupportedIdentityProviders:
+        - COGNITO
+
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Ref CognitoDomain
+      UserPoolId: !Ref UserPool
+
+  AccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies:
+        - PolicyName: 'DynamoDBAccess'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                Resource:
+                  - !GetAtt ComplianceTable.Arn
+                  - !Sub "${ComplianceTable.Arn}/index/*"
+
+  AddComplianceRuleLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: com.techinnovate.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
+      Runtime: java11
+      MemorySize: 512
+      Role: !GetAtt AccessRole.Arn
+      Events:
+        ComplianceDashboardApi:
+          Type: Api
+          Properties:
+            Path: /rules
+            Method: post
+
+  GetComplianceStatusLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: com.techinnovate.compliancedashboard.lambda.GetComplianceStatusLambda::handleRequest
+      Runtime: java11
+      MemorySize: 512
+      Role: !GetAtt AccessRole.Arn
+      Events:
+        ComplianceDashboardApi:
+          Type: Api
+          Properties:
+            Path: /status
+            Method: get
+
+  ComplianceTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "PK"
+          AttributeType: "S"
+        - AttributeName: "SK"
+          AttributeType: "S"
+        - AttributeName: "GSI1PK"
+          AttributeType: "S"
+        - AttributeName: "GSI1SK"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "PK"
+          KeyType: "HASH"
+        - AttributeName: "SK"
+          KeyType: "RANGE"
+      BillingMode: "PAY_PER_REQUEST"
+      TableName: "ComplianceTable"
+      GlobalSecondaryIndexes:
+        - IndexName: "GSI1"
+          KeySchema:
+            - AttributeName: "GSI1PK"
+              KeyType: "HASH"
+            - AttributeName: "GSI1SK"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+
+Outputs:
+  CognitoUserPoolId:
+    Value: !Ref UserPool
+    Description: "The Cognito User Pool ID"
+  CognitoUserPoolClientId:
+    Value: !Ref UserPoolClient
+    Description: "The Cognito User Pool Client ID"
+  CognitoDomain:
+    Value: !Sub "${CognitoDomain}.auth.us-east-2.amazoncognito.com"
+    Description: "The Cognito Domain"
+  ApiBaseUrl:
+    Description: "API Gateway endpoint base URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

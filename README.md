@@ -32,7 +32,7 @@ The Automated Compliance Dashboard is a serverless application designed to help 
 3. Invoke a specific function: `sam local invoke "FunctionName"`
 
 ## Contributing
-[Include guidelines for contributing to the project, if applicable]
+N/A
 
 ## License
 N/A

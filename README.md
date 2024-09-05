@@ -19,3 +19,25 @@ The Automated Compliance Dashboard is a serverless application designed to help 
 - Gradle
 
 ## Project Structure
+## Setup and Deployment
+1. Ensure you have AWS CLI and SAM CLI installed and configured.
+2. Clone the repository: `git clone [repository-url]`
+3. Navigate to the project directory: `cd automated-compliance-dashboard`
+4. Build the project: `sam build`
+5. Deploy the project: `sam deploy --guided`
+
+## Local Development
+1. Run unit tests: `./gradlew test`
+2. Start the API locally: `sam local start-api`
+3. Invoke a specific function: `sam local invoke "FunctionName"`
+
+## Contributing
+[Include guidelines for contributing to the project, if applicable]
+
+## License
+N/A
+
+## Contact
+mohamadacma@gmail.com
+
+Project Link: [https://github.com/mohamadacma/automated-compliance-dashboard](https://github.com/mohamadacma/automated-compliance-dashboard)

@@ -228,16 +228,16 @@ If report generation fails: Throw ReportGenerationException
 ### Dashboard
 A central page displaying real-time compliance status, risk alerts, and key metrics. Provides an at-a-glance overview of the organization's compliance health.
 
-![img_2.png](img_2.png)
+![img_2.png](src/main/java/resources/img_2.png)
 ### Rule Management
 A page for adding, editing, and deleting compliance rules. Allows administrators to define and maintain the compliance framework.
 
-![img_3.png](img_3.png)
+![img_3.png](src/main/java/resources/img_3.png)
 
 ### Violations
 A page for viewing and managing compliance violations. Enables users to track, prioritize, and resolve non-compliance issues.
 
-![img_4.png](img_4.png)
+![img_4.png](src/main/java/resources/img_4.png)
 
 ### Users
 A page for managing user accounts, roles, and permissions. Facilitates user administration and access control.

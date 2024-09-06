@@ -39,11 +39,10 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
 - Multi-tenancy features for supporting multiple organizations within the same instance.
 
 ## 6. Proposed Architectural Overview
-- **Spring Boot**: Core application, handling API requests, rule management, and generating compliance reports.
 - **AWS Lambda**: Used for specific tasks like real-time monitoring and alerting.
 - **DynamoDB**: Storage for compliance rules and status data.
 - **API Gateway**: Exposes the Lambda functions as RESTful endpoints.
-- **WebSocket**: Enables real-time updates to the dashboard.
+- **AWS Cognito**: for user authentication
 
 ## 7. API
 ## API Endpoints

@@ -46,8 +46,10 @@ The Automated Compliance Dashboard provides a centralized platform to monitor co
 - **WebSocket**: Enables real-time updates to the dashboard.
 
 ## 7. API
+## API Endpoints
 - **GET /api/compliance-status**: Fetches the current compliance status across all frameworks.
 - **POST /api/rules**: Adds a new compliance rule.
+- 
 - ### Add Compliance Rule Endpoint
 
 * Accepts a POST request to /api/rules
@@ -60,17 +62,15 @@ threshold (int): The threshold value that triggers a compliance action
 action (String): The action to be taken when the rule is breached
 
 ##### UML sequence diagram representation:
-![img_6.png](img_6.png)
-
+![img_6.png](src/main/java/resources/img_6.png)
 
 Returns the newly created compliance rule with a unique ruleId assigned by the Compliance Dashboard service.
 - **PUT /api/rules/{id}**: Updates an existing compliance rule.
 - **DELETE /api/rules/{id}**: Deletes a compliance rule.
 - **GET /api/reports**: Generates and downloads a compliance report.
 
-## API Endpoints
-
 ### Update Compliance Rule Endpoint
+
 * **Method**: PUT
 * **Path**: `/api/rules/{ruleId}`
 * **Description**: Updates an existing compliance rule
@@ -242,7 +242,7 @@ A page for viewing and managing compliance violations. Enables users to track, p
 ### Users
 A page for managing user accounts, roles, and permissions. Facilitates user administration and access control.
 
-![img_5.png](img_5.png)
+![img_5.png](src/main/java/resources/img_5.png)
 
 
 - **Reports**: A page for generating and downloading compliance reports.

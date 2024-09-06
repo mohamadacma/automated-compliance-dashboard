@@ -31,8 +31,11 @@ The Automated Compliance Dashboard is a serverless application designed to help 
 2. Start the API locally: `sam local start-api`
 3. Invoke a specific function: `sam local invoke "FunctionName"`
 
-## Contributing
+## Contributions
 N/A
+
+## Work in Progress
+This project is currently in development. Some features may not be fully implemented or functional at this stage. Contributions and feedback are welcome as we continue to refine and build out the core functionality.
 
 ## License
 N/A

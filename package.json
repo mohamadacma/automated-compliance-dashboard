@@ -1,0 +1,26 @@
+{
+  "name": "automated-compliance-dashboard",
+  "version": "1.0.0",
+  "description": "A scalable, real-time platform for managing regulatory compliance across multiple frameworks. This Automated Compliance Dashboard integrates with cloud services to provide centralized monitoring, reporting, and risk management for various compliance standards like SOC 2, ISO 27001, and GDPR. Features include real-time compliance status monitoring, customizable compliance rules, violation tracking, report generation, and user management",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohamadacma/automated-compliance-dashboard.git"
+  },
+  "keywords": [
+    "compliance",
+    "dashboard",
+    "regulatory",
+    "real-time",
+    "monitoring"
+  ],
+  "author": "Mohamad Ahmad",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/mohamadacma/automated-compliance-dashboard/issues"
+  },
+  "homepage": "https://github.com/mohamadacma/automated-compliance-dashboard#readme"
+}

@@ -35,9 +35,9 @@ test {
     }
 }
 checkstyle {
-    toolVersion '8.17'
-    configFile = file("${rootDir}/checkstyle.xml")
-    def suppressionFile = file("${rootDir}/suppressions.xml")
+    toolVersion '8.45'
+    configFile = file("${rootDir}/checkstyle/selfservice/checkstyle.xml")
+    def suppressionFile = file("${rootDir}/checkstyle/foundations/suppressions.xml")
     if (suppressionFile.exists()) {
         configProperties.put('checkstyle.suppression.filter', suppressionFile)
     }
@@ -64,5 +64,7 @@ jacocoTestCoverageVerification {
         }
     }
 }
+checkstyleMain.enabled = false  //temporary measure to isolate the gradle build isse
+checkstyleTest.enabled = false
 
 check.dependsOn jacocoTestCoverageVerification

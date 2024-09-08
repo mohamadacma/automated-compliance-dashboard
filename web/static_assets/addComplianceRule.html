@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Compliance Rule</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body class="background">
+<header id="header">
+    <!-- Header content will be dynamically added by the Header class -->
+</header>
+<div class="container">
+    <div class="card">
+        <h2>Add Compliance Rule</h2>
+        <form class="card-content" id="add-compliance-rule-form">
+            <p class="hidden error" id="error-message"></p>
+            <p class="form-field">
+                <label for="rule-name">Rule Name</label>
+                <input type="text" required class="validated-field" id="rule-name" placeholder="e.g., Password Complexity" autofocus>
+            </p>
+            <p class="form-field">
+                <label for="description">Description</label>
+                <textarea id="description" required class="validated-field" placeholder="Describe the compliance rule"></textarea>
+            </p>
+            <p class="form-field">
+                <label for="framework">Framework</label>
+                <input type="text" required class="validated-field" id="framework" placeholder="e.g., NIST, ISO 27001">
+            </p>
+            <p class="form-field">
+                <label for="threshold">Threshold</label>
+                <input type="number" required class="validated-field" id="threshold" placeholder="e.g., 90">
+            </p>
+            <p class="form-field">
+                <label for="action">Action</label>
+                <input type="text" required class="validated-field" id="action" placeholder="e.g., Alert, Block">
+            </p>
+            <button type="submit" class="button" id="save-btn">Save Rule</button>
+        </form>
+    </div>
+</div>
+<footer class="footer">
+    &copy; 2024 Compliance Dashboard. All rights reserved.
+</footer>
+<script src="/assets/addComplianceRule.js"></script>
+</body>
+</html>

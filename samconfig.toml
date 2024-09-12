@@ -1,0 +1,15 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "AutomatedComplianceDashboard"
+region = "us-east-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+s3_bucket = "mohamadahmad-compliance-dashboard"
+image_repositories = []
+s3_prefix = "AutomatedComplianceDashboard"
+resolve_s3 = true
+profile = "compliance-dashboard"
+disable_rollback = true
+parameter_overrides = "CognitoDomain=\"compliancedashboard-unique-123\" S3Bucket=\"mohamadahmad-compliance-dashboard\""

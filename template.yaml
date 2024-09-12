@@ -12,6 +12,19 @@ Parameters:
     Type: String
     Description: Parameter to specify the S3 Bucket to use for deployment
 
+  FrontendDeployment:
+    Default: remote
+    Type: String
+    AllowedValues:
+      - local
+      - remote
+    ConstraintDescription: Must specify 'local' or 'remote' for FrontendDeployment.
+
+Conditions:
+  DeployCloudFront: !Equals
+    - !Ref FrontendDeployment
+    - remote
+
 Globals:
   Function:
     Timeout: 20
@@ -29,14 +42,31 @@ Globals:
           UserPoolArn: !GetAtt UserPool.Arn
 
 Resources:
+  # Cognito Configuration remains the same
+
   UserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: !Sub ${CognitoDomain}-user-pool
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
       UsernameAttributes:
         - email
+      UsernameConfiguration:
+        CaseSensitive: false
       AutoVerifiedAttributes:
         - email
+      UserPoolName: !Sub ${CognitoDomain}-user-pool
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: false
+          Required: true
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: true
 
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
@@ -45,8 +75,16 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       CallbackURLs:
         - http://localhost:8000
+        - !If
+          - DeployCloudFront
+          - !Sub "https://${CloudfrontDistribution.DomainName}"
+          - !Ref "AWS::NoValue"
       LogoutURLs:
         - http://localhost:8000
+        - !If
+          - DeployCloudFront
+          - !Sub "https://${CloudfrontDistribution.DomainName}"
+          - !Ref "AWS::NoValue"
       AllowedOAuthFlows:
         - code
         - implicit
@@ -57,6 +95,7 @@ Resources:
         - profile
       SupportedIdentityProviders:
         - COGNITO
+      PreventUserExistenceErrors: ENABLED
 
   UserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
@@ -64,9 +103,65 @@ Resources:
       Domain: !Ref CognitoDomain
       UserPoolId: !Ref UserPool
 
+  # CloudFront Configuration remains the same
+
+  CloudFrontOriginAccessIdentity:
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Condition: DeployCloudFront
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: 'Serverless frontend website'
+
+  CloudfrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Condition: DeployCloudFront
+    Properties:
+      DistributionConfig:
+        Comment: "Cloudfront distribution for serverless website"
+        DefaultRootObject: "index.html"
+        Enabled: true
+        HttpVersion: http2
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: s3-website
+            DomainName: !Sub "${S3Bucket}.s3.us-east-2.amazonaws.com"
+            OriginPath: /static
+            S3OriginConfig:
+              OriginAccessIdentity:
+                Fn::Sub: 'origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}'
+        DefaultCacheBehavior:
+          Compress: 'true'
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          ForwardedValues:
+            QueryString: false
+          TargetOriginId: s3-website
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: DeployCloudFront
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+          -
+            Effect: Allow
+            Action: 's3:GetObject'
+            Resource:
+              - !Sub "arn:aws:s3:::${S3Bucket}/*"
+            Principal:
+              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessIdentity}"
+
   AccessRole:
     Type: AWS::IAM::Role
     Properties:
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaRole'
+        - 'arn:aws:iam::aws:policy/AWSLambdaExecute'
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -76,33 +171,46 @@ Resources:
                 - lambda.amazonaws.com
             Action:
               - 'sts:AssumeRole'
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
       Policies:
-        - PolicyName: 'DynamoDBAccess'
+        - PolicyName: 'WriteToCloudWatch'
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
-                  - 'dynamodb:PutItem'
-                  - 'dynamodb:GetItem'
-                  - 'dynamodb:UpdateItem'
-                  - 'dynamodb:DeleteItem'
-                  - 'dynamodb:Scan'
-                  - 'dynamodb:Query'
-                Resource:
-                  - !GetAtt ComplianceTable.Arn
-                  - !Sub "${ComplianceTable.Arn}/index/*"
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - cloudwatch:PutMetricData
+                Resource: '*'
+        - PolicyName: 'GetSecrets'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: secretsmanager:GetSecretValue
+                Resource: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*'
+        - PolicyName: 'AccessComplianceTable'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: dynamodb:*
+                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/ComplianceRules"
 
   AddComplianceRuleLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: com.techinnovate.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
-      Runtime: java11
-      MemorySize: 512
       Role: !GetAtt AccessRole.Arn
+      CodeUri: ComplianceDashboardLambda
+      Handler: com.example.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
         ComplianceDashboardApi:
           Type: Api
@@ -110,14 +218,39 @@ Resources:
             Path: /rules
             Method: post
 
+  UpdateComplianceRuleLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt AccessRole.Arn
+      CodeUri: ComplianceDashboardLambda
+      Handler: com.example.compliancedashboard.lambda.UpdateComplianceRuleLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        ComplianceDashboardApi:
+          Type: Api
+          Properties:
+            Path: /rules/{id}
+            Method: put
+
   GetComplianceStatusLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: com.techinnovate.compliancedashboard.lambda.GetComplianceStatusLambda::handleRequest
-      Runtime: java11
-      MemorySize: 512
       Role: !GetAtt AccessRole.Arn
+      CodeUri: ComplianceDashboardLambda
+      Handler: com.example.compliancedashboard.lambda.GetComplianceStatusLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
         ComplianceDashboardApi:
           Type: Api
@@ -125,45 +258,87 @@ Resources:
             Path: /status
             Method: get
 
-  ComplianceTable:
+  DeleteComplianceRuleLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt AccessRole.Arn
+      CodeUri: ComplianceDashboardLambda
+      Handler: com.example.compliancedashboard.lambda.DeleteComplianceRuleLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        ComplianceDashboardApi:
+          Type: Api
+          Properties:
+            Path: /rules/{id}
+            Method: delete
+
+  SearchComplianceRulesLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt AccessRole.Arn
+      CodeUri: ComplianceDashboardLambda
+      Handler: com.example.compliancedashboard.lambda.SearchComplianceRulesLambda::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        ComplianceDashboardApi:
+          Type: Api
+          Properties:
+            Path: /rules/search
+            Method: get
+            Auth:
+              Authorizer: NONE
+
+  ComplianceRulesTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: "PK"
+        - AttributeName: "ruleId"
           AttributeType: "S"
-        - AttributeName: "SK"
-          AttributeType: "S"
-        - AttributeName: "GSI1PK"
-          AttributeType: "S"
-        - AttributeName: "GSI1SK"
+        - AttributeName: "framework"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "PK"
+        - AttributeName: "ruleId"
           KeyType: "HASH"
-        - AttributeName: "SK"
-          KeyType: "RANGE"
       BillingMode: "PAY_PER_REQUEST"
-      TableName: "ComplianceTable"
+      TableName: "ComplianceRules"
       GlobalSecondaryIndexes:
-        - IndexName: "GSI1"
+        - IndexName: "FrameworkIndex"
           KeySchema:
-            - AttributeName: "GSI1PK"
+            - AttributeName: "framework"
               KeyType: "HASH"
-            - AttributeName: "GSI1SK"
-              KeyType: "RANGE"
           Projection:
-            ProjectionType: "ALL"
+            ProjectionType: ALL
 
 Outputs:
   CognitoUserPoolId:
     Value: !Ref UserPool
-    Description: "The Cognito User Pool ID"
+    Description: "The Cognito User Pool ID (COGNITO_USER_POOL_ID)."
   CognitoUserPoolClientId:
     Value: !Ref UserPoolClient
-    Description: "The Cognito User Pool Client ID"
+    Description: "The Cognito User Pool Client ID (COGNITO_USER_POOL_CLIENT_ID)."
   CognitoDomain:
     Value: !Sub "${CognitoDomain}.auth.us-east-2.amazoncognito.com"
-    Description: "The Cognito Domain"
+    Description: "The Cognito Domain (COGNITO_DOMAIN)."
   ApiBaseUrl:
-    Description: "API Gateway endpoint base URL for Prod stage"
+    Description: "API Gateway endpoint base URL for Prod stage (API_BASE_URL)."
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  CognitoRedirectSignin:
+    Description: "The URL of the deployed front-end application (COGNITO_REDIRECT_SIGNIN)."
+    Value: !Sub "https://${CloudfrontDistribution.DomainName}"
+    Condition: DeployCloudFront
+  CognitoRedirectSignout:
+    Description: "The URL of the deployed front-end application (COGNITO_REDIRECT_SIGNOUT)."
+    Value: !Sub "https://${CloudfrontDistribution.DomainName}"
+    Condition: DeployCloudFront

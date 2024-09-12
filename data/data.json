@@ -1,0 +1,49 @@
+{
+  "ComplianceRules": [
+    {
+      "PutRequest": {
+        "Item": {
+          "ruleId": { "S": "CR-001" },
+          "ruleName": { "S": "GDPR Data Retention Policy" },
+          "description": { "S": "Ensures compliance with GDPR's data retention policy" },
+          "framework": { "S": "GDPR" },
+          "threshold": { "N": "90" },
+          "action": { "S": "Alert and Notify Compliance Officer" },
+          "background": { "S": "Critical for ensuring data is only kept for the necessary duration" },
+          "createdAt": { "S": "2024-09-11T10:00:00Z" },
+          "updatedAt": { "S": "2024-09-11T10:00:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "ruleId": { "S": "CR-002" },
+          "ruleName": { "S": "ISO 27001 Information Security" },
+          "description": { "S": "Compliance with ISO 27001 information security policies" },
+          "framework": { "S": "ISO 27001" },
+          "threshold": { "N": "75" },
+          "action": { "S": "Initiate a Security Audit" },
+          "background": { "S": "Addresses security risks for information systems" },
+          "createdAt": { "S": "2024-09-11T10:15:00Z" },
+          "updatedAt": { "S": "2024-09-11T10:15:00Z" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "ruleId": { "S": "CR-003" },
+          "ruleName": { "S": "SOC 2 Incident Response" },
+          "description": { "S": "Maintains incident response policies for SOC 2 compliance" },
+          "framework": { "S": "SOC 2" },
+          "threshold": { "N": "100" },
+          "action": { "S": "Escalate to Incident Response Team" },
+          "background": { "S": "Critical for responding to security incidents in a timely manner" },
+          "createdAt": { "S": "2024-09-11T10:30:00Z" },
+          "updatedAt": { "S": "2024-09-11T10:30:00Z" }
+        }
+      }
+    }
+  ]
+}

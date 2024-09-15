@@ -1,7 +1,7 @@
 package com.techinnovate.compliancedashboard.lambda;
 
-import com.nashss.se.teaminsynchservice.dependency.DaggerServiceComponent;
-import com.nashss.se.teaminsynchservice.dependency.ServiceComponent;
+import com.techinnovate.compliancedashboard.dependency.DaggerServiceComponent;
+import com.techinnovate.compliancedashboard.dependency.ServiceComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

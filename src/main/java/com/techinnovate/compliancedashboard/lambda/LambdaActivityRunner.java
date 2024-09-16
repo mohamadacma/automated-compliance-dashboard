@@ -1,6 +1,5 @@
 package com.techinnovate.compliancedashboard.lambda;
 
-import com.techinnovate.compliancedashboard.dependency.DaggerServiceComponent;
 import com.techinnovate.compliancedashboard.dependency.ServiceComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

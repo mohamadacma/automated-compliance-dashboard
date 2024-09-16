@@ -12,7 +12,6 @@ import com.techinnovate.compliancedashboard.utils.ComplianceDashboardServiceUtil
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.inject.Inject;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -24,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 public class AddComplianceRuleActivity {
     private final Logger log = LogManager.getLogger();
     private final ComplianceRuleDao complianceRuleDao;
-
     /**
      * Instantiates a new AddComplianceRuleActivity object.
      *
@@ -93,3 +91,5 @@ public class AddComplianceRuleActivity {
             throw new InvalidAttributeValueException("Background [" + request.getBackground() +
                     "] contains illegal characters");
         }
+    }
+}

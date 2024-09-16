@@ -14,8 +14,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.dagger:dagger:2.x'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.x'
+    implementation 'com.google.dagger:dagger:2.45'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.45'
+    implementation 'com.google.dagger:dagger:2.45'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.45'
     implementation 'javax.inject:javax.inject:1'
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.2'
@@ -63,7 +65,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.0  // You can adjust this value as needed
+                minimum = 0.0  // adjust as needed
             }
         }
     }

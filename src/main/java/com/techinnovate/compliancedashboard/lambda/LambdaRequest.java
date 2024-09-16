@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static com.nashss.se.teaminsynchservice.utils.NullUtils.ifNull;
+import static com.techinnovate.compliancedashboard.utils.NullUtils.ifNull;
 
 /**
  * Represents a generic "APIGateway" request made to a lambda function.
@@ -19,6 +19,7 @@ import static com.nashss.se.teaminsynchservice.utils.NullUtils.ifNull;
 public class LambdaRequest<T> extends APIGatewayProxyRequestEvent {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final long serialVersionUID = 5191592216029081700L;
     protected final Logger log = LogManager.getLogger();
 
     /**

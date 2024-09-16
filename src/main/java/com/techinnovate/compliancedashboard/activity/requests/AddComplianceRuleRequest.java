@@ -3,9 +3,6 @@ package com.techinnovate.compliancedashboard.activity.requests;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
-/**
- * Request class for adding a new compliance rule.
- */
 @JsonDeserialize(builder = AddComplianceRuleRequest.Builder.class)
 public class AddComplianceRuleRequest {
     private final String ruleName;
@@ -14,6 +11,7 @@ public class AddComplianceRuleRequest {
     private final int threshold;
     private final String action;
     private final String background;
+    private final String createdBy;
 
     private AddComplianceRuleRequest(Builder builder) {
         this.ruleName = builder.ruleName;
@@ -22,30 +20,19 @@ public class AddComplianceRuleRequest {
         this.threshold = builder.threshold;
         this.action = builder.action;
         this.background = builder.background;
+        this.createdBy = builder.createdBy;
     }
 
-    public String getRuleName() {
-        return ruleName;
-    }
+    public String getRuleName() { return ruleName; }
+    public String getDescription() { return description; }
+    public String getFramework() { return framework; }
+    public int getThreshold() { return threshold; }
+    public String getAction() { return action; }
+    public String getBackground() { return background; }
+    public String getCreatedBy() { return createdBy; }  // New getter
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getFramework() {
-        return framework;
-    }
-
-    public int getThreshold() {
-        return threshold;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public String getBackground() {
-        return background;
+    public static Builder builder() {
+        return new Builder();
     }
 
     @JsonPOJOBuilder
@@ -56,6 +43,7 @@ public class AddComplianceRuleRequest {
         private int threshold;
         private String action;
         private String background;
+        private String createdBy;  // New field
 
         public Builder withRuleName(String ruleName) {
             this.ruleName = ruleName;
@@ -84,6 +72,11 @@ public class AddComplianceRuleRequest {
 
         public Builder withBackground(String background) {
             this.background = background;
+            return this;
+        }
+
+        public Builder withCreatedBy(String createdBy) {  // New method
+            this.createdBy = createdBy;
             return this;
         }
 

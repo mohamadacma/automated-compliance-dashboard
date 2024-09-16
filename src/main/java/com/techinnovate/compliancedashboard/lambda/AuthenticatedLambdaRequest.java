@@ -4,21 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * Represents a generic, authenticated "APIGateway" request made to a lambda function.
- * @param <T> The type of the concrete request that should be created from this LambdaRequest
- */
 public class AuthenticatedLambdaRequest<T> extends LambdaRequest<T> {
 
-    /**
-     * Use the given converter to create an instance of T from the claims included in the request's JWT token.
-     * @param converter Contains the conversion code
-     * @return A instance of T that contains data from the request's claims.
-     */
+    private static final long serialVersionUID = -5509968619119978971L;
+
     public T fromUserClaims(Function<Map<String, String>, T> converter) {
         try {
             return converter.apply(getClaims());
@@ -28,10 +20,13 @@ public class AuthenticatedLambdaRequest<T> extends LambdaRequest<T> {
     }
 
     private Map<String, String> getClaims() throws JsonProcessingException {
-        // If we are running locally using SAM, we have to manually decode claims from the JWT Token.
-        return System.getenv().get("AWS_SAM_LOCAL") == null ?
-                (Map<String, String>) super.getRequestContext().getAuthorizer().get("claims") :
-                getClaimsFromAuthHeader(super.getHeaders().get("Authorization"));
+        if (System.getenv().get("AWS_SAM_LOCAL") == null) {
+            @SuppressWarnings("unchecked")
+            Map<String, String> claims = (Map<String, String>) super.getRequestContext().getAuthorizer().get("claims");
+            return claims;
+        } else {
+            return getClaimsFromAuthHeader(super.getHeaders().get("Authorization"));
+        }
     }
 
     private Map<String, String> getClaimsFromAuthHeader(final String authorizationHeader)
@@ -50,7 +45,6 @@ public class AuthenticatedLambdaRequest<T> extends LambdaRequest<T> {
         String[] sections = jwt.split("\\.");
         String payload = new String(decoder.decode(sections[1]));
 
-        return super.MAPPER.readValue(payload, new TypeReference<HashMap<String, String>>() {
-        });
+        return super.MAPPER.readValue(payload, new TypeReference<Map<String, String>>() {});
     }
 }

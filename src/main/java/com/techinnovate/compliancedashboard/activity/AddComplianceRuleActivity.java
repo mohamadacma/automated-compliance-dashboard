@@ -12,6 +12,7 @@ import com.techinnovate.compliancedashboard.utils.ComplianceDashboardServiceUtil
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.inject.Inject;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 

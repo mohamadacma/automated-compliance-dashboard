@@ -3,6 +3,8 @@ package com.techinnovate.compliancedashboard.dependency;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.techinnovate.compliancedashboard.dynamodb.DynamoDbClientProvider;
+import dagger.Provides;
+import dagger.Module;
 
 import javax.inject.Singleton;
 

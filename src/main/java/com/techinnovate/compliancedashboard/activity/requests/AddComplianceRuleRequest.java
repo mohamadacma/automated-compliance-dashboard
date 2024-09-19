@@ -29,7 +29,7 @@ public class AddComplianceRuleRequest {
     public int getThreshold() { return threshold; }
     public String getAction() { return action; }
     public String getBackground() { return background; }
-    public String getCreatedBy() { return createdBy; }  // New getter
+    public String getCreatedBy() { return createdBy; }
 
     public static Builder builder() {
         return new Builder();
@@ -43,7 +43,7 @@ public class AddComplianceRuleRequest {
         private int threshold;
         private String action;
         private String background;
-        private String createdBy;  // New field
+        private String createdBy;
 
         public Builder withRuleName(String ruleName) {
             this.ruleName = ruleName;
@@ -75,7 +75,7 @@ public class AddComplianceRuleRequest {
             return this;
         }
 
-        public Builder withCreatedBy(String createdBy) {  // New method
+        public Builder withCreatedBy(String createdBy) {
             this.createdBy = createdBy;
             return this;
         }

@@ -22,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/mohamadacma/automated-compliance-dashboard/issues"
   },
-  "homepage": "https://github.com/mohamadacma/automated-compliance-dashboard#readme"
+  "homepage": "https://github.com/mohamadacma/automated-compliance-dashboard#readme",
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "babel-loader": "^9.2.1"
+  }
 }

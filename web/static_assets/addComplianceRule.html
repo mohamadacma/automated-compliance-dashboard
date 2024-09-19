@@ -3,45 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Compliance Rule</title>
+    <title>Add Compliance Rule - Automated Compliance Dashboard</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap">
 </head>
-<body class="background">
+<body>
 <header id="header">
     <!-- Header content will be dynamically added by the Header class -->
 </header>
-<div class="container">
-    <div class="card">
-        <h2>Add Compliance Rule</h2>
-        <form class="card-content" id="add-compliance-rule-form">
-            <p class="hidden error" id="error-message"></p>
-            <p class="form-field">
-                <label for="rule-name">Rule Name</label>
-                <input type="text" required class="validated-field" id="rule-name" placeholder="e.g., Password Complexity" autofocus>
-            </p>
-            <p class="form-field">
-                <label for="description">Description</label>
-                <textarea id="description" required class="validated-field" placeholder="Describe the compliance rule"></textarea>
-            </p>
-            <p class="form-field">
-                <label for="framework">Framework</label>
-                <input type="text" required class="validated-field" id="framework" placeholder="e.g., NIST, ISO 27001">
-            </p>
-            <p class="form-field">
-                <label for="threshold">Threshold</label>
-                <input type="number" required class="validated-field" id="threshold" placeholder="e.g., 90">
-            </p>
-            <p class="form-field">
-                <label for="action">Action</label>
-                <input type="text" required class="validated-field" id="action" placeholder="e.g., Alert, Block">
-            </p>
-            <button type="submit" class="button" id="save-btn">Save Rule</button>
-        </form>
+
+<main class="main-content">
+    <div class="container">
+        <div class="form-card">
+            <h1>Add New Compliance Rule</h1>
+            <form id="add-compliance-rule-form">
+                <p class="hidden error" id="error-message"></p>
+                <div class="form-field">
+                    <label for="rule-name">Rule Name</label>
+                    <input type="text" required class="validated-field" id="rule-name" placeholder="e.g., Data Encryption Standard" autofocus>
+                </div>
+                <div class="form-field">
+                    <label for="description">Description</label>
+                    <textarea id="description" required class="validated-field" placeholder="Provide a detailed description of the compliance rule"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="framework">Regulatory Framework</label>
+                    <input type="text" required class="validated-field" id="framework" placeholder="e.g., GDPR, HIPAA, SOC 2">
+                </div>
+                <div class="form-field">
+                    <label for="threshold">Compliance Threshold (%)</label>
+                    <input type="number" required class="validated-field" id="threshold" placeholder="e.g., 95" min="0" max="100">
+                </div>
+                <div class="form-field">
+                    <label for="action">Non-Compliance Action</label>
+                    <input type="text" required class="validated-field" id="action" placeholder="e.g., Alert Security Team, Suspend Access">
+                </div>
+                <button type="submit" class="button-primary" id="save-btn">Create Rule</button>
+            </form>
+        </div>
     </div>
-</div>
+</main>
+
 <footer class="footer">
-    &copy; 2024 Compliance Dashboard. All rights reserved.
+    <div class="container">
+        <p>&copy; 2024 Automated Compliance Dashboard. All rights reserved.</p>
+    </div>
 </footer>
-<script src="/assets/addComplianceRule.js"></script>
+
+<script src="/src/pages/addComplianceRule.js"></script>
 </body>
 </html>

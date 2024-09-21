@@ -52,35 +52,29 @@ module.exports = {
     dashboard: path.resolve(__dirname, 'src', 'pages', 'dashboard.js'),
   },
   output: {
-    path: path.resolve(__dirname, 'build', 'assets'),
-    filename: '[name].js',
-    publicPath: '/assets/',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        }
-      }
-    ]
+    path: path.resolve(__dirname, 'build'),
+    filename: 'src/pages/[name].js',
+    publicPath: '/',
   },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js'],
   },
   devServer: {
     static: {
       directory: path.join(__dirname, 'static_assets'),
     },
-    port: 8000,
+    port: 3000,
     client: {
       overlay: true,
     },
+    devMiddleware: {
+      writeToDisk: true,
+    },
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+    },
   },
-  devtool: 'source-map'
-}
+  devtool: 'source-map',
+};

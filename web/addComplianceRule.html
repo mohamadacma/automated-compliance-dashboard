@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Compliance Rule - Automated Compliance Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap">
+</head>
+<body>
+<header id="header">
+    <!-- Header content will be dynamically added by the Header class -->
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <div class="form-card">
+            <h1>Add New Compliance Rule</h1>
+            <form id="add-compliance-rule-form">
+                <p class="hidden error" id="error-message"></p>
+                <div class="form-field">
+                    <label for="rule-name">Rule Name</label>
+                    <input type="text" required class="validated-field" id="rule-name" placeholder="e.g., Data Encryption Standard" autofocus>
+                </div>
+                <div class="form-field">
+                    <label for="description">Description</label>
+                    <textarea id="description" required class="validated-field" placeholder="Provide a detailed description of the compliance rule"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="framework">Regulatory Framework</label>
+                    <input type="text" required class="validated-field" id="framework" placeholder="e.g., GDPR, HIPAA, SOC 2">
+                </div>
+                <div class="form-field">
+                    <label for="threshold">Compliance Threshold (%)</label>
+                    <input type="number" required class="validated-field" id="threshold" placeholder="e.g., 95" min="0" max="100">
+                </div>
+                <div class="form-field">
+                    <label for="action">Non-Compliance Action</label>
+                    <input type="text" required class="validated-field" id="action" placeholder="e.g., Alert Security Team, Suspend Access">
+                </div>
+                <button type="submit" class="button-primary" id="save-btn">Create Rule</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 Automated Compliance Dashboard. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="/src/pages/addComplianceRule.js"></script>
+</body>
+</html>

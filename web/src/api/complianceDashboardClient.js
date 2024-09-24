@@ -28,10 +28,12 @@ export default class ComplianceDashboardClient extends BindingClass {
 
     async login() {
         await this.authenticator.login();
+        window.location.reload();
     }
 
     async logout() {
         await this.authenticator.logout();
+        window.location.href = '/';
     }
 
     async getTokenOrThrow(unauthenticatedErrorMessage) {

@@ -223,7 +223,7 @@ Resources:
     Properties:
       Role: !GetAtt AccessRole.Arn
       CodeUri: ComplianceDashboardLambda
-      Handler: com.techinnovate.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
+      Handler: com.techinnovate.compliancedashboard.lambda.UpdateComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -243,7 +243,7 @@ Resources:
     Properties:
       Role: !GetAtt AccessRole.Arn
       CodeUri: ComplianceDashboardLambda
-      Handler: com.techinnovate.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
+      Handler: com.techinnovate.compliancedashboard.lambda.GetComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -263,7 +263,7 @@ Resources:
     Properties:
       Role: !GetAtt AccessRole.Arn
       CodeUri: ComplianceDashboardLambda
-      Handler: com.techinnovate.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
+      Handler: com.techinnovate.compliancedashboard.lambda.DeleteComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -283,7 +283,7 @@ Resources:
     Properties:
       Role: !GetAtt AccessRole.Arn
       CodeUri: ComplianceDashboardLambda
-      Handler: com.techinnovate.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
+      Handler: com.techinnovate.compliancedashboard.lambda.SearchComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64

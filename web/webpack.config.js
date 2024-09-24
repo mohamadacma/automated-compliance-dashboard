@@ -47,6 +47,7 @@ module.exports = {
     new webpack.DefinePlugin(envKeys),
   ],
   entry: {
+   index: path.resolve(__dirname, 'src', 'pages', 'index.js'),
     addComplianceRule: path.resolve(__dirname, 'src', 'pages', 'addComplianceRule.js'),
     complianceStatus: path.resolve(__dirname, 'src', 'pages', 'complianceStatus.js'),
     dashboard: path.resolve(__dirname, 'src', 'pages', 'dashboard.js'),
@@ -60,6 +61,7 @@ module.exports = {
     extensions: ['.js'],
   },
   devServer: {
+
     static: {
       directory: path.join(__dirname, 'static_assets'),
     },

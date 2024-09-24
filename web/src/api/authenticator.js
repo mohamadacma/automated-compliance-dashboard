@@ -38,7 +38,13 @@ export default class Authenticator extends BindingClass {
     }
 
     async login() {
-        await Auth.federatedSignIn();
+        try {
+            console.log('Attempting to log in...');
+            await this.authenticator.login();
+            console.log('Login successful');
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
     }
 
     async logout() {
@@ -61,7 +67,7 @@ export default class Authenticator extends BindingClass {
                 redirectSignIn: process.env.COGNITO_REDIRECT_SIGNIN,
                 redirectSignOut: process.env.COGNITO_REDIRECT_SIGNOUT,
                 region: 'us-east-2',
-                scope: ['email', 'openid', 'phone', 'profile'],
+                scope: ['openid', 'email', 'profile', 'aws.cognito.signin.user.admin'],
                 responseType: 'code'
             }
         });

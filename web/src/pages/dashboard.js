@@ -18,6 +18,17 @@ class Dashboard extends BindingClass {
      */
     async mount() {
         await this.header.addHeaderToPage();
+         try {
+                const identity = await this.client.getIdentity();
+                if (!identity) {
+                    // Redirect to Cognito login if not authenticated
+                    this.client.login();
+                    return;
+                }
+                // Continue with page-specific logic for authenticated users
+            } catch (error) {
+                console.error('Error checking authentication', error);
+            }
         await this.loadDashboard();
     }
 

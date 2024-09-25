@@ -38,13 +38,13 @@ export default class Authenticator extends BindingClass {
     }
 
     async login() {
-        try {
-            console.log('Attempting to log in...');
-            await this.authenticator.login();
-            console.log('Login successful');
-        } catch (error) {
-            console.error('Login failed:', error);
-        }
+      try {
+        console.log('Attempting to log in...');
+        await Auth.federatedSignIn();
+        console.log('Login successful');
+      } catch (error) {
+        console.error('Login failed:', error);
+      }
     }
 
     async logout() {

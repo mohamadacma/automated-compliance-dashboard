@@ -12,7 +12,7 @@ export default class ComplianceDashboardClient extends BindingClass {
         this.authenticator = new Authenticator();
         this.props = props;
 
-        axios.defaults.baseURL = process.env.API_BASE_URL;
+        axios.defaults.baseURL = process.env.API_BASE_URL || "https://yffut6z69c.execute-api.us-east-2.amazonaws.com/Prod";
         this.axiosClient = axios;
         this.clientLoaded();
     }

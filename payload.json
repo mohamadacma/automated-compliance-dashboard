@@ -1,0 +1,13 @@
+{
+  "body": {
+    "ruleName": "Test Rule",
+    "description": "Test Description",
+    "framework": "Test Framework",
+    "threshold": 50,
+    "action": "Test Action",
+    "background": "Test Background"
+  },
+  "claims": {
+    "email": "user@example.com"
+  }
+}

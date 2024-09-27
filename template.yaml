@@ -28,6 +28,13 @@ Conditions:
 Globals:
   Function:
     Timeout: 20
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'http://localhost:3000'"
+      Auth:
+        DefaultAuthorizer: NONE  # Change this for local testing
 
   Api:
     Cors:
@@ -74,12 +81,14 @@ Resources:
       UserPoolId: !Ref UserPool
       AllowedOAuthFlowsUserPoolClient: true
       CallbackURLs:
+        - http://localhost:3000
         - http://localhost:8000
         - !If
           - DeployCloudFront
           - !Sub "https://${CloudfrontDistribution.DomainName}"
           - !Ref "AWS::NoValue"
       LogoutURLs:
+        - http://localhost:3000
         - http://localhost:8000
         - !If
           - DeployCloudFront
@@ -202,8 +211,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: ComplianceDashboardLambda
-      Handler: com.example.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
+      CodeUri: ./
+      Handler: com.techinnovate.compliancedashboard.lambda.AddComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -222,8 +231,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: ComplianceDashboardLambda
-      Handler: com.example.compliancedashboard.lambda.UpdateComplianceRuleLambda::handleRequest
+      CodeUri: ./
+      Handler: com.techinnovate.compliancedashboard.lambda.UpdateComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -242,8 +251,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: ComplianceDashboardLambda
-      Handler: com.example.compliancedashboard.lambda.GetComplianceStatusLambda::handleRequest
+      CodeUri: ./
+      Handler: com.techinnovate.compliancedashboard.lambda.GetComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -262,8 +271,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: ComplianceDashboardLambda
-      Handler: com.example.compliancedashboard.lambda.DeleteComplianceRuleLambda::handleRequest
+      CodeUri: ./
+      Handler: com.techinnovate.compliancedashboard.lambda.DeleteComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64
@@ -282,8 +291,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Role: !GetAtt AccessRole.Arn
-      CodeUri: ComplianceDashboardLambda
-      Handler: com.example.compliancedashboard.lambda.SearchComplianceRulesLambda::handleRequest
+      CodeUri: ./
+      Handler: com.techinnovate.compliancedashboard.lambda.SearchComplianceRuleLambda::handleRequest
       Runtime: java11
       Architectures:
         - x86_64

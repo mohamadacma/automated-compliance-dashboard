@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Compliance Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<header id="header">
+    <!-- Header content will be dynamically added by the Header class -->
+</header>
+
+<div class="notification-bar">
+    New feature: Automated risk assessment now available. <a href="#" class="button-light">Learn more →</a>
+</div>
+
+<main class="main-content">
+    <div class="container">
+        <div class="two-column-layout">
+            <div class="left-column">
+                <h1>Streamline Compliance, Mitigate Risk, Ensure Trust</h1>
+                <p>Our Automated Compliance Dashboard simplifies your security and compliance processes through continuous monitoring and automation, suitable for organizations at any stage of their compliance journey.</p>
+                <a href="addComplianceRule.html" class="button-primary">Add Compliance Rule</a>
+            </div>
+            <div class="right-column">
+                <div class="dashboard-card">
+                    <h2>Compliance Overview</h2>
+                    <div id="compliance-status"></div>
+                </div>
+                <div class="dashboard-card">
+                    <h2>Active Compliance Rules</h2>
+                    <div id="rules-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 Automated Compliance Dashboard. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="/src/pages/dashboard.js"></script>
+</body>
+</html>

@@ -6,15 +6,55 @@ export default class ComplianceDashboardClient extends BindingClass {
     constructor(props = {}) {
         super();
 
-        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'addComplianceRule', 'updateComplianceRule', 'deleteComplianceRule', 'getComplianceStatus', 'searchViolations'];
+        const methodsToBind = ['clientLoaded', 'getIdentity', 'login', 'logout', 'addComplianceRule', 'updateComplianceRule', 'deleteComplianceRule', 'getComplianceStatus', 'searchViolations', 'getTokenOrThrow', 'handleError'];
         this.bindClassMethods(methodsToBind, this);
 
         this.authenticator = new Authenticator();
         this.props = props;
 
-        axios.defaults.baseURL = process.env.API_BASE_URL;
+        axios.defaults.baseURL = process.env.API_BASE_URL || "https://yffut6z69c.execute-api.us-east-2.amazonaws.com/Prod";
         this.axiosClient = axios;
         this.clientLoaded();
+    }
+        clientLoaded() {
+            if (this.props.hasOwnProperty("onReady")) {
+                this.props.onReady();
+            }
+        }
+
+    async getIdentity() {
+        return await this.authenticator.getCurrentUserInfo();
+    }
+
+    async login() {
+        await this.authenticator.login();
+        window.location.reload();
+    }
+
+    async logout() {
+        await this.authenticator.logout();
+        window.location.href = '/';
+    }
+
+    async getTokenOrThrow(unauthenticatedErrorMessage) {
+        const isLoggedIn = await this.authenticator.isUserLoggedIn();
+        if (!isLoggedIn) {
+            throw new Error(unauthenticatedErrorMessage);
+        }
+
+        return await this.authenticator.getUserToken();
+    }
+
+    handleError(error, errorCallback) {
+        console.error(error);
+
+        if (error.response && error.response.data.message) {
+            console.error(`Error from server: ${error.response.data.message}`);
+        }
+
+        if (errorCallback) {
+            errorCallback(error);
+        }
     }
 
 

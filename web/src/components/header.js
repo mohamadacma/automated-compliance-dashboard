@@ -1,84 +1,47 @@
 import ComplianceDashboardClient from '../api/complianceDashboardClient';
 import BindingClass from "../util/bindingClass";
 
-/**
- * The header component for the Compliance Dashboard website.
- */
 export default class Header extends BindingClass {
-    constructor() {
+    constructor(dataStore) {
         super();
-
-        const methodsToBind = [
-            'addHeaderToPage', 'createSiteTitle', 'createUserInfoForHeader',
-            'createLoginButton', 'createLogoutButton', 'createButton'
-        ];
-        this.bindClassMethods(methodsToBind, this);
-
+        this.dataStore = dataStore;
         this.client = new ComplianceDashboardClient();
+        this.bindClassMethods(['addHeaderToPage', 'createLoginButton', 'createLogoutButton'], this);
     }
 
-    /**
-     * Add the header to the page.
-     */
     async addHeaderToPage() {
         const currentUser = await this.client.getIdentity();
-
-        const siteTitle = this.createSiteTitle();
-        const userInfo = this.createUserInfoForHeader(currentUser);
-
         const header = document.getElementById('header');
-        header.appendChild(siteTitle);
-        header.appendChild(userInfo);
-    }
 
-    createSiteTitle() {
-        const homeButton = document.createElement('a');
-        homeButton.classList.add('header_home');
-        homeButton.href = 'dashboard.html';
-        homeButton.innerText = 'Compliance Dashboard';
-
-        const siteTitle = document.createElement('div');
-        siteTitle.classList.add('site-title');
-        siteTitle.appendChild(homeButton);
-
-        return siteTitle;
-    }
-
-    createUserInfoForHeader(currentUser) {
-        const userInfo = document.createElement('div');
-        userInfo.classList.add('user-info');
+        const title = document.createElement('h1');
+        title.innerText = 'Compliance Dashboard';
+        header.appendChild(title);
 
         if (currentUser) {
-            const userName = currentUser.name || 'User';
-            const logoutButton = this.createLogoutButton(userName);
-            userInfo.appendChild(logoutButton);
+            header.appendChild(this.createLogoutButton(currentUser.name));
         } else {
-            const loginButton = this.createLoginButton();
-            userInfo.appendChild(loginButton);
+            header.appendChild(this.createLoginButton());
         }
-
-        return userInfo;
     }
 
     createLoginButton() {
-        return this.createButton('Login', this.client.login);
+        const button = document.createElement('button');
+        button.innerText = 'Login';
+        button.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default form submission
+            this.client.login();
+        });
+        return button;
     }
 
-    createLogoutButton(userName) {
-        return this.createButton(`Logout: ${userName}`, this.client.logout);
+    createLogoutButton(username) {
+        return this.createButton(`Logout (${username})`, () => this.client.logout());
     }
 
     createButton(text, clickHandler) {
-        const button = document.createElement('a');
-        button.classList.add('button');
-        button.href = '#';
+        const button = document.createElement('button');
         button.innerText = text;
-
-        button.addEventListener('click', async (event) => {
-            event.preventDefault();
-            await clickHandler();
-        });
-
+        button.addEventListener('click', clickHandler);
         return button;
     }
 }
